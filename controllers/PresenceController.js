@@ -44,6 +44,7 @@ async function getPresencesByUserId(req, res) {
     }
     res.status(200).json(presences);
 }
+
 module.exports = {
     addPresence,
     getAllPresences,
