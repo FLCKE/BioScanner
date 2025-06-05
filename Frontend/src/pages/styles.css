@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: white;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.splashContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.logoContainer {
+  text-align: center;
+  margin-top: 60px;
+  margin-bottom: 30px;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.logoText {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.input {
+  width: 100%;
+  max-width: 400px;
+  height: 50px;
+  background-color: #E0E0E0;
+  margin-bottom: 15px;
+  padding: 0 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #222;
+  border: none;
+}
+
+.button {
+  width: 100%;
+  max-width: 400px;
+  height: 50px;
+  background-color: black;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.registerContainer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.registerText {
+  margin-bottom: 5px;
+  color: #222;
+  font-size: 13px;
+}
+
+.registerLink {
+  font-weight: bold;
+  text-decoration: underline;
+  color: #000;
+  font-size: 13px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}

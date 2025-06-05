@@ -71,7 +71,7 @@ router.post('/add', UserController.addUser); // Récupérer tous les utilisateur
  *       401:
  *         description: Mot de passe incorrect
  */
-router.get('/login', UserController.loginUser); // Récupérer un utilisateur
+router.post('/login', UserController.loginUser); // Récupérer un utilisateur
 
 /**
  * @swagger
