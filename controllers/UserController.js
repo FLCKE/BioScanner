@@ -4,54 +4,56 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs'); // Assurez-vous que bcrypt est installé
 
 
-async function  addUser(req, res) {
-    // Ajout d'un nouvel utilisateur
-    let { name, email, passwordHash, localId } = req.body;
-    // Vérifier si l'utilisateur existe déjà
-    const existingUser = await Users.find({email: email});
-    if (existingUser.length > 0) {
-        return res.status(400).json({ message: 'User already exists' });
-    }
-    passwordHash=handleRequest.hashData(passwordHash); // Hash le mot de passe
-    // Créer un nouvel utilisateur
-    const newUser = await Users.create({ name, email, passwordHash, localId });
-    newUser.save()
-    .then( (user) => {
-        // Créer un token JWT
-         token =  jwt.sign({
-                id: user._id,
-                email: user.email,
-                name: user.name,
-                localId: user.localId
-            }, process.env.JWT_SECRET, { expiresIn: '24h' }); // Remplacez 'votre_clé_secrète' par votre clé secrète
-        
-        // 4. Préparer une réponse sans le hash
-        const userObj = user.toObject();
+async function addUser(req, res) {
+    try {
+        let { name, email, password, localId } = req.body;
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: "Champs obligatoires manquants" });
+        }
+        const existingUser = await Users.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
+        const passwordHash = await bcrypt.hash(password, 10);
+        const newUser = await Users.create({ name, email, passwordHash, localId });
+        const token = jwt.sign({
+            id: newUser._id,
+            email: newUser.email,
+            name: newUser.name,
+            localId: newUser.localId
+        }, process.env.JWT_SECRET, { expiresIn: '24h' });
+        const userObj = newUser.toObject();
         delete userObj.passwordHash;
-            // Ajoutez le token à l'utilisateur  
-        res.status(201).json({"token":token, userObj});
-
-        })
-        .catch(err => res.status(400).json({ error: err.message }));
+        res.status(201).json({ token, user: userObj });
+    } catch (err) {
+        console.error("Erreur dans addUser:", err);
+        res.status(500).json({ error: err.message });
+    }
 }
 
+
 async function loginUser(req, res) {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email et mot de passe requis" });
+    }
 
     try {
-        // 1. Chercher l'utilisateur par email
+        console.log("Tentative de login:", email, password);
+
         const user = await Users.findOne({ email });
         if (!user) {
+            console.log("Utilisateur non trouvé");
             return res.status(400).json({ message: 'Utilisateur non trouvé' });
         }
 
-        // 2. Vérifier que le mot de passe est correct
         const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
         if (!isPasswordValid) {
+            console.log("Mot de passe incorrect");
             return res.status(401).json({ message: 'Mot de passe incorrect' });
         }
 
-        // 3. Générer un token JWT
         const token = jwt.sign({
             id: user._id,
             email: user.email,
@@ -59,16 +61,16 @@ async function loginUser(req, res) {
             localId: user.localId
         }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
-        // 4. Préparer une réponse sans le hash
         const userObj = user.toObject();
         delete userObj.passwordHash;
 
         return res.status(200).json({ token, user: userObj });
-
     } catch (err) {
+        console.error("Erreur de login:", err);
         return res.status(500).json({ error: err.message });
     }
 }
+
 
 async function getUserById(req, res) {
     // Récupérer un utilisateur par ID
