@@ -2,10 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import * as faceapi from 'face-api.js';
 import axios from 'axios';
-import printIcon from '../assets/print.png';
 import faceidIcon from '../assets/faceid.png';
 
-// Styled Components
+// Styled Components (inchangés)
 const Container = styled.div`
   background-color: #fff;
   padding: 20px;
@@ -122,33 +121,36 @@ const Scanner = () => {
   const [failed, setFailed] = useState(false);
   const [alreadyPresent, setAlreadyPresent] = useState(false);
 
+  // 1) Initialisation : userId + date + check localStorage
   useEffect(() => {
-    setUserId(localStorage.getItem('userId'));
-    const today = new Date();
-    setDateString(today.toLocaleDateString('fr-FR'));
+    const uid = localStorage.getItem('userId');
+    setUserId(uid);
+    const today = new Date().toLocaleDateString('fr-FR');
+    setDateString(today);
+
+    const lastScan = localStorage.getItem(`lastScanDate_${uid}`);
+if (lastScan === today) {
+  setAlreadyPresent(true);
+  setSuccess(true);
+  setMessage("Présence déjà validée aujourd'hui.");
+}
   }, []);
 
+  // 2) Dès que userId est connu ET qu'on n'a pas déjà validé localement :
   useEffect(() => {
-    const init = async () => {
-      if (!userId) return;
+    if (!userId || alreadyPresent) return;
 
-      try {
-        await loadModels();
-        await loadReferenceImage(userId);
-        await checkPresence(userId);
-      } catch (err) {
-        console.error(err);
-      }
+    const init = async () => {
+      await loadModels();
+      await loadReferenceImage(userId);
+      await checkPresenceOnServer(userId);
     };
 
     init();
+    return () => { clearInterval(intervalRef.current); stopWebcam(); };
+  }, [userId, alreadyPresent]);
 
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      stopWebcam();
-    };
-  }, [userId]);
-
+  // 3) Chargement des modèles
   const loadModels = async () => {
     const MODEL_URL = `${process.env.PUBLIC_URL}/models`;
     await Promise.all([
@@ -159,55 +161,51 @@ const Scanner = () => {
     setModelsLoaded(true);
   };
 
-  const loadReferenceImage = async (uid) => {
+  // 4) Charger la photo de référence depuis l'API
+  const loadReferenceImage = async uid => {
     try {
       const res = await axios.get(`http://localhost:5000/api/pictures/${uid}`);
-      const imageUrl = res.data.imageUrl.startsWith('http') ? res.data.imageUrl : `http://localhost:5000${res.data.imageUrl}`;
-      const image = await faceapi.fetchImage(imageUrl);
-
-      const detection = await faceapi
-        .detectSingleFace(image, new faceapi.TinyFaceDetectorOptions())
+      const url = res.data.imageUrl.startsWith('http')
+        ? res.data.imageUrl
+        : `http://localhost:5000${res.data.imageUrl}`;
+      const img = await faceapi.fetchImage(url);
+      const det = await faceapi
+        .detectSingleFace(img, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
         .withFaceDescriptor();
-
-      if (detection) {
-        setLabeledDescriptor(new faceapi.LabeledFaceDescriptors('Utilisateur', [detection.descriptor]));
-      } else {
-        setMessage("Visage de référence non détecté.");
-      }
-    } catch (err) {
+      if (det) setLabeledDescriptor(new faceapi.LabeledFaceDescriptors('Utilisateur', [det.descriptor]));
+      else setMessage("Visage de référence non détecté.");
+    } catch {
       setMessage("Erreur chargement image de référence.");
     }
   };
 
-  const checkPresence = async (uid) => {
+  // 5) Vérification côté serveur (sécurité)
+  const checkPresenceOnServer = async uid => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/presence/${uid}`);
+      const res = await axios.get(`http://localhost:5000/api/presence/user/${uid}`);
       const today = new Date().toLocaleDateString('fr-FR');
-      const found = response.data.some(item => new Date(item.timestamp).toLocaleDateString('fr-FR') === today);
-
+      const found = res.data.some(p => new Date(p.timestamp).toLocaleDateString('fr-FR') === today);
       if (found) {
         setAlreadyPresent(true);
         setSuccess(true);
         setMessage("Présence déjà validée !");
+        localStorage.setItem('lastScanDate', today);
       }
     } catch (err) {
-      console.error('Erreur vérification présence :', err);
+      console.error("Vérif serveur échouée :", err);
     }
   };
 
+  // 6) Démarrage du scan facial
   const handleFaceScan = async () => {
     if (alreadyPresent) return;
-
-    setSuccess(false);
-    setFailed(false);
-    setMessage('');
+    setMessage(''); setSuccess(false); setFailed(false);
 
     if (!modelsLoaded || !labeledDescriptor) {
       setMessage("Modèles ou image de référence non disponibles.");
       return;
     }
-
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
       videoRef.current.srcObject = stream;
@@ -218,18 +216,19 @@ const Scanner = () => {
     }
   };
 
+  // 7) Arrêter la caméra
   const stopWebcam = () => {
     if (videoRef.current?.srcObject) {
-      videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+      videoRef.current.srcObject.getTracks().forEach(t => t.stop());
     }
   };
 
+  // 8) Enregistrement de la présence + géoloc + lastScanDate
   const recordPresence = async () => {
     if (!navigator.geolocation) {
-      setMessage("La géolocalisation n’est pas supportée.");
+      setMessage("Géolocalisation non supportée.");
       return;
     }
-
     navigator.geolocation.getCurrentPosition(
       async ({ coords: { latitude, longitude } }) => {
         try {
@@ -238,6 +237,8 @@ const Scanner = () => {
             latitude,
             longitude,
           });
+          const today = new Date().toLocaleDateString('fr-FR');
+        localStorage.setItem(`lastScanDate_${userId}`, today);
           setAlreadyPresent(true);
           setMessage(res.data.message || "Présence enregistrée.");
         } catch {
@@ -248,32 +249,32 @@ const Scanner = () => {
     );
   };
 
+  // 9) Boucle de détection faciale
   const startFaceDetection = () => {
     const video = videoRef.current;
     const canvas = faceapi.createCanvasFromMedia(video);
     canvasContainerRef.current.innerHTML = '';
     canvasContainerRef.current.appendChild(canvas);
 
-    const displaySize = { width: video.videoWidth, height: video.videoHeight };
-    faceapi.matchDimensions(canvas, displaySize);
-    const faceMatcher = new faceapi.FaceMatcher(labeledDescriptor, 0.4);
+    const size = { width: video.videoWidth, height: video.videoHeight };
+    faceapi.matchDimensions(canvas, size);
+    const matcher = new faceapi.FaceMatcher(labeledDescriptor, 0.4);
 
     intervalRef.current = setInterval(async () => {
       const detections = await faceapi
         .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
         .withFaceDescriptors();
-
-      const resized = faceapi.resizeResults(detections, displaySize);
-      const context = canvas.getContext('2d');
-      context.clearRect(0, 0, canvas.width, canvas.height);
+      const resized = faceapi.resizeResults(detections, size);
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       let matched = false;
-      resized.forEach(detection => {
-        const bestMatch = faceMatcher.findBestMatch(detection.descriptor);
-        const label = bestMatch.label === 'unknown' ? 'Inconnu ❌' : 'Reconnu ✅';
-        new faceapi.draw.DrawBox(detection.detection.box, { label }).draw(canvas);
-        if (bestMatch.label !== 'unknown') matched = true;
+      resized.forEach(d => {
+        const best = matcher.findBestMatch(d.descriptor);
+        const lbl = best.label === 'unknown' ? 'Inconnu ❌' : 'Reconnu ✅';
+        new faceapi.draw.DrawBox(d.detection.box, { label: lbl }).draw(canvas);
+        if (best.label !== 'unknown') matched = true;
       });
 
       if (resized.length === 0) {
@@ -295,29 +296,29 @@ const Scanner = () => {
 
   return (
     <Container>
-      <DateText>Date<br /><span>{dateString}</span></DateText>
+      <DateText>Date<br/><span>{dateString}</span></DateText>
       <Instruction>Veuillez justifier votre présence</Instruction>
 
       <Button onClick={handleFaceScan} disabled={alreadyPresent}>
-        <ButtonIcon src={faceidIcon} alt="Face ID" />
+        <ButtonIcon src={faceidIcon} alt="Face ID"/>
         <ButtonText>Face ID</ButtonText>
       </Button>
 
       {!success && !failed && !alreadyPresent && (
         <>
-          <Video ref={videoRef} muted playsInline />
+          <Video ref={videoRef} muted playsInline/>
           <div ref={canvasContainerRef}></div>
         </>
       )}
 
       {(success || alreadyPresent) ? (
         <>
-          <SuccessCheck />
+          <SuccessCheck/>
           <Message $success={true}>Présence validée !</Message>
         </>
       ) : failed ? (
         <>
-          <RedCross />
+          <RedCross/>
           <Message $success={false}>Visage non reconnu.</Message>
         </>
       ) : (
