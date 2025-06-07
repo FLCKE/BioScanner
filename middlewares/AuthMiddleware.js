@@ -1,25 +1,21 @@
 const jwt = require('jsonwebtoken');
 
-
 function verifyToken(req, res, next) {
-  const token = req.headers['authorization'];
-    if (!token) {
-        return res.status(401).json({ message: 'Unauthorized' });
-    }
+  const authHeader = req.headers['authorization'];
 
-    // Vérifiez le token ici (par exemple, en le décodant ou en le validant)
-    // Si le token est valide, passez au middleware suivant
-    // Sinon, renvoyez une réponse d'erreur
-    try {
-        // Ici, vous pouvez ajouter la logique pour vérifier le token
-        // Par exemple, si vous utilisez JWT, vous pouvez le décoder et vérifier sa validité
-         const decoded = jwt.verify(token, process.env.JWT_SECRET); // Remplacez 'votre_clé_secrète' par votre clé secrète
-         if (!decoded) {
-            return res.status(403).json({ message: 'Forbidden' });
-        }
-        next(); // Passez au middleware suivant
-    } catch (error) {
-        return res.status(403).json({ message: 'Forbidden' });
-    }
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  const token = authHeader.split(' ')[1]; // On extrait juste le token
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // tu peux ajouter les infos du user au req pour les routes suivantes
+    next();
+  } catch (error) {
+    return res.status(403).json({ message: 'Forbidden' });
+  }
 }
-module.exports = {verifyToken};
+
+module.exports = { verifyToken };

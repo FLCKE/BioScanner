@@ -5,13 +5,18 @@ import profil from '../assets/profil.png';
 import { getPresencesByUserId } from '../services/api'; // vérifie le bon chemin
 
 export default function HistoriqueScreen() {
+
   const [data, setData] = useState([]);
   const userId = localStorage.getItem('userId'); // stocké après login
+  console.log('userId (localStorage):', userId);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const presences = await getPresencesByUserId(userId);
+       console.log('userId:', userId);
+      console.log('presences:', presences);
+      presences.forEach(p => console.log('presence item:', p));
         const formatted = presences.map((item, index) => ({
           id: item._id || index.toString(),
           date: new Date(item.timestamp).toLocaleDateString('fr-FR'), // formatage FR
@@ -21,6 +26,7 @@ export default function HistoriqueScreen() {
       } catch (error) {
         console.error('Erreur lors du chargement des présences :', error);
       }
+
     };
 
     if (userId) {
@@ -30,15 +36,9 @@ export default function HistoriqueScreen() {
 
   return (
     <div className="container">
-      <header className="header">
-        <div className="header-left">
-          <img src={fingerprint} className="logo" alt="fingerprint" />
-          <h2 className="title">Bio Scanner</h2>
-        </div>
-        <img src={profil} className="logo" alt="profil" />
-      </header>
+      
 
-      <h3 className="section-title">Historiques</h3>
+      <h3 className="section-title ">Historiques</h3>
 
       <div className="list">
         {data.map(item => (
