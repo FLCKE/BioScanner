@@ -1,45 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import './styles1.css';
-import fingerprint from '../assets/fingerprint.png';
-import profil from '../assets/profil.png';
-import { getPresencesByUserId } from '../services/api'; // vérifie le bon chemin
+import { useLocation } from 'react-router-dom'; // ✅ Import pour détecter les changements de page
+import { getPresencesByUserId } from '../services/api';
 
 export default function HistoriqueScreen() {
-
   const [data, setData] = useState([]);
-  const userId = localStorage.getItem('userId'); // stocké après login
-  console.log('userId (localStorage):', userId);
+  const location = useLocation(); // ✅ Hook React Router
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const presences = await getPresencesByUserId(userId);
-       console.log('userId:', userId);
-      console.log('presences:', presences);
-      presences.forEach(p => console.log('presence item:', p));
         const formatted = presences.map((item, index) => ({
           id: item._id || index.toString(),
-          date: new Date(item.timestamp).toLocaleDateString('fr-FR'), // formatage FR
-          status: 'Présent', // ou une logique spécifique selon les cas
+          date: new Date(item.timestamp).toLocaleDateString('fr-FR'),
+          status: 'Présent',
         }));
         setData(formatted);
       } catch (error) {
         console.error('Erreur lors du chargement des présences :', error);
       }
-
     };
 
     if (userId) {
       fetchData();
     }
-  }, [userId]);
+  }, [userId, location]); // ✅ Déclenche le fetch à chaque changement d'URL
 
   return (
     <div className="container">
-      
-
-      <h3 className="section-title ">Historiques</h3>
-
+      <h3 className="section-title">Historiques</h3>
       <div className="list">
         {data.map(item => (
           <div className="item" key={item.id}>
