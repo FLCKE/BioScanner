@@ -124,16 +124,13 @@ async function getPresencesByUserId(req, res) {
     const userId = req.params.id;
     const presences = await Presence.find({ userId });
 
-    if (!presences || presences.length === 0) {
-      return res.status(404).json({ message: 'Aucune présence trouvée pour cet utilisateur' });
-    }
-
-    res.status(200).json(presences);
+    return res.status(200).json(presences); // ✅ Toujours 200 même si vide
   } catch (error) {
     console.error('Erreur récupération par userId:', error);
-    res.status(500).json({ message: 'Erreur serveur' });
+    return res.status(500).json({ message: 'Erreur serveur' });
   }
 }
+
 
 module.exports = {
   addPresence,
