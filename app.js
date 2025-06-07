@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+require('dotenv').config();
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocs = require('./swagger.js'); // Assurez-vous que le chemin est correct
@@ -18,7 +19,7 @@ app.use(cors({ origin: "http://localhost:3000", credentials: true })); // Middle
 app.get("/", (req, res) => {
     res.send("API OK ✅");
 });
-app.use("/api/picture", pictureRoutes);
+app.use("/api/pictures", pictureRoutes);
 app.use("/api/user", userRoutes); // Assurez-vous que le chemin est correct
 app.use("/api/local", localRoutes); // Assurez-vous que le chemin est correct
 app.use("/api/presence", presenceRoutes); // Assurez-vous que le chemin est correct

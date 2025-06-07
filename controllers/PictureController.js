@@ -15,7 +15,7 @@ const storage = new CloudinaryStorage({
 });
 
 const upload = multer({ storage: storage });
-const uploadSingle = upload.single('file');
+const uploadSingle = upload.single('image');
 
 async function uploadUserPicture(req, res) {
   uploadSingle(req, res, async function (err) {
@@ -24,19 +24,23 @@ async function uploadUserPicture(req, res) {
       return res.status(400).json({ error: 'Erreur lors de l\'upload de la photo' });
     }
 
+    if (!req.file) {
+      return res.status(400).json({ error: "Aucun fichier envoyé." });
+    }
+
     try {
       const { userId } = req.body;
+      if (!userId) {
+        return res.status(400).json({ error: "userId manquant." });
+      }
 
-      // ici req.file est disponible
-      console.log("fichier", req.file);
+      // Supprimer l'ancienne photo si besoin
+      await Pictures.deleteMany({ userId });
 
-      // Exemple : sauvegarder dans MongoDB
       const newPhoto = await Pictures.create({
-        userId:userId,
+        userId: userId,
         imageUrl: req.file.path,
       });
-
-      await newPhoto.save();
 
       res.status(200).json({ message: 'Photo uploadée avec succès', url: req.file.path });
     } catch (error) {
@@ -45,6 +49,7 @@ async function uploadUserPicture(req, res) {
     }
   });
 }
+
 async function getPicture(req,res){
     const userId = await req.params.id;
     try {
@@ -54,7 +59,7 @@ async function getPicture(req,res){
            return res.status(200).send(picture);
         } 
 
-        return res.status(400).send('Picture not found');
+        return res.status(404).send('Picture not found');
         
     }
     catch(error){
