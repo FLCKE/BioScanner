@@ -10,7 +10,7 @@ app.get('/api/ping', (req, res) => res.json({ pong: true }));
 
 db(); // Connexion à la base de données MongoDB
 
-// app.listen(PORT, () => {
-//     console.log(`🚀 Serveur lancé sur http://localhost:${PORT}`);
-// });
+app.listen(PORT, () => {
+    console.log(`🚀 Serveur lancé sur http://localhost:${PORT}`);
+});
 export default serverless(app);
