@@ -13,7 +13,7 @@ const pictureRoutes = require("./routes/PictureRoutes");
 const app = express();
 app.use(express.json()); // Middleware pour parser le JSON dans les requêtes
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true })); // Middleware pour activer CORS
+app.use(cors({ origin: true, credentials: true })); // Middleware pour activer CORS
 
 
 app.get("/", (req, res) => {
