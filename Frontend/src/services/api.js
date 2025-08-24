@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api/user';
+const API_LOCAL = 'http://localhost:5000/api/local';
 const PRESENCE_API_URL = 'http://localhost:5000/api/presence';
 const PICTURES_API_URL = 'http://localhost:5000/api/pictures';
 
@@ -47,5 +48,9 @@ export const uploadUserPicture = async (formData) => {
 
 export const getUserPicture = async (userId) => {
   const response = await axios.get(`${PICTURES_API_URL}/${userId}`);
+  return response.data;
+};
+export const getLocal = async () => {
+  const response = await axios.get(`${API_LOCAL}/get-all-locals`);
   return response.data;
 };

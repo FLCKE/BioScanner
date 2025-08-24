@@ -44,7 +44,8 @@ const LocalController = require('../controllers/LocalController');
  *         description: Erreur lors de l’ajout du local
  */
 
-router.post('/add',LocalController.addLocal); // Récupérer tous les utilisateurs
+router.post('/add',LocalController.addLocal); 
+// Récupérer tous les utilisateurs
 
 /**
  * @swagger
@@ -58,7 +59,8 @@ router.post('/add',LocalController.addLocal); // Récupérer tous les utilisateu
  *       404:
  *         description: Aucun local trouvé
  */
-router.get('/get-all-locals',LocalController.getAllLocals); // Récupérer un utilisateur par ID
+router.get('/get-all-locals',LocalController.getAllLocals); 
+// Récupérer un utilisateur par ID
 
 /**
  * @swagger
@@ -79,7 +81,8 @@ router.get('/get-all-locals',LocalController.getAllLocals); // Récupérer un ut
  *       404:
  *         description: Local non trouvé
  */
-router.get('/:id',LocalController.getLocalById); // Supprimer un utilisateur par ID
+router.get('/:id',LocalController.getLocalById); 
+// Supprimer un utilisateur par ID
 
 /**
  * @swagger
@@ -100,7 +103,8 @@ router.get('/:id',LocalController.getLocalById); // Supprimer un utilisateur par
  *       404:
  *         description: Local non trouvé
  */
-router.delete('/:id',LocalController.deleteLocalById); // Mettre à jour un utilisateur par ID
+router.delete('/:id',LocalController.deleteLocalById); 
+// Mettre à jour un utilisateur par ID
 
 /**
  * @swagger
@@ -138,5 +142,6 @@ router.delete('/:id',LocalController.deleteLocalById); // Mettre à jour un util
  *       404:
  *         description: Local non trouvé
  */
-router.put('/:id',LocalController.UpdateLocal); // Mettre à jour un utilisateur par ID
+router.put('/:id',LocalController.UpdateLocal); 
+// Mettre à jour un utilisateur par ID
 module.exports = router;

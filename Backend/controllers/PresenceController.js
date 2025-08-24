@@ -52,7 +52,10 @@ async function addPresence(req, res) {
 
     console.log(`📍 Distance calculée : ${distance} m`);
     console.log(`📍 Est dans le périmètre ? ${isInside}`);
-
+    if (!isInside) {
+      console.warn('❌ L’utilisateur est en dehors du périmètre du local');
+      return res.status(200).json({ value: false, message: 'En dehors du périmètre du local' });
+    }
     const presence = new Presence({
       userId,
       localId: local._id,
@@ -64,7 +67,8 @@ async function addPresence(req, res) {
     console.log('✅ Présence enregistrée avec succès :', presence);
 
     return res.status(201).json({
-      message: isInside ? 'Présence enregistrée dans le local' : 'En dehors du périmètre',
+      value: true,
+      message: 'Présence enregistrée dans le local',
       presence
     });
   } catch (error) {

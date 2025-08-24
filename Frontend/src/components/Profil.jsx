@@ -76,7 +76,6 @@ const styles = {
     border: 'none',
     borderRadius: 6,
     cursor: 'pointer',
-    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
   }

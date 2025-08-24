@@ -1,0 +1,86 @@
+.logoContainer {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.container{
+    width: 50%;
+    align-items: center;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 5px 5px 15px 5px rgba(185, 185, 185, 0.3);
+}
+.logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.logoText {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.input {
+  width: 100%;
+  max-width: 400px;
+  height: 50px;
+  background-color: #E0E0E0;
+  margin-bottom: 15px;
+  padding: 0 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #222;
+  border: none;
+}
+
+.button {
+  width: 100%;
+  max-width: 400px;
+  height: 50px;
+  background-color: black;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.registerContainer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.registerText {
+  margin-bottom: 5px;
+  color: #222;
+  font-size: 13px;
+}
+
+.registerLink {
+  font-weight: bold;
+  text-decoration: underline;
+  color: #000;
+  font-size: 13px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.errorMessage {
+  color: red;
+  margin-top: 10px;
+  font-weight: bold;
+}
+@media (max-width:448px){
+.container{
+    width: 90%;
+}
+}

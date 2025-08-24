@@ -1,0 +1,152 @@
+.topnav-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 64px;
+}
+
+.topnav-left {
+  display: flex;
+  align-items: center;
+  min-width: 180px;
+}
+
+.topnav-logo-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+
+.topnav-logo-text {
+  font-weight: bold;
+  font-size: 20px;
+  color: #222;
+  letter-spacing: 1px;
+}
+
+.topnav-center {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.topnav-link {
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.topnav-link.active {
+  color: #000;
+  font-weight: bold;
+}
+
+.topnav-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 4px;
+}
+
+.topnav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topnav-user-email {
+  font-size: 14px;
+  color: #333;
+}
+
+.topnav-profile-link {
+  text-decoration: none;
+}
+
+.topnav-user-icon {
+  width: 28px;
+  height: 28px;
+  color: #222;
+}
+
+.topnav-logout-button {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.topnav-hamburger {
+  display: none;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 16px;
+  margin-right: 16px;
+  z-index: 2001;
+}
+
+.topnav-mobile-menu {
+  position: absolute;
+  top: 64px;
+  right: 0;
+  background: #fff;
+  width: 80%;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2000;
+  border-bottom-left-radius: 10px;
+}
+
+.topnav-mobile-link {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  padding: 18px 0;
+  width: 100%;
+  justify-content: center;
+  border-bottom: 1px solid #eee;
+}
+
+.topnav-mobile-link.active {
+  color: #000;
+  font-weight: bold;
+}
+
+/* Responsive styles */
+@media (max-width: 800px) {
+  .topnav-center {
+    display: none;
+  }
+  .topnav-hamburger {
+    display: flex !important;
+  }
+  .topnav-right{
+    display: none;
+  }
+}
+@media (min-width: 801px) {
+  .topnav-hamburger {
+    display: none !important;
+  }
+  .topnav-mobile-menu {
+    display: none !important;
+  }
+}

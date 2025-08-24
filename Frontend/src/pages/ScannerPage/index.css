@@ -1,0 +1,105 @@
+.container-scanner {
+  background-color: #fff;
+  padding: 20px;
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.dateText {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.instruction {
+  font-weight: bold;
+  font-size: 15px;
+  margin: 15px 0;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  background-color: #000;
+  border: none;
+  border-radius: 8px;
+  height: 48px;
+  width: 240px;
+  margin: 8px auto;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .button {
+    width: 98vw;
+    max-width: 320px;
+  }
+}
+
+.buttonIcon {
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+}
+
+.buttonText {
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.video {
+  display: block;
+  margin: 20px auto;
+  border: 1px solid #ccc;
+  width: 90vw;
+  max-width: 400px;
+  height: auto;
+}
+
+@media (max-width: 600px) {
+  .video {
+    width: 98vw;
+    height: auto;
+  }
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 32px auto;
+}
+
+.messageSuccess {
+  margin: 20px auto;
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+  color: green;
+  background: #e6ffe6;
+  border-radius: 8px;
+  width: fit-content;
+}
+
+.messageFailed {
+  margin: 20px auto;
+  padding: 16px 24px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #b00020;
+  background: #ffe6e6;
+  border-radius: 8px;
+  width: fit-content;
+}
