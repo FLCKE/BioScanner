@@ -67,12 +67,12 @@ export default function RegisterScreen() {
         onChange={(e) => setPassword(e.target.value)}
         type="password"
       />
-      <input
+      {/* <input
         className="input"
         placeholder="Entreprise (LocalID)"
         value={entreprise}
         onChange={(e) => setEntreprise(e.target.value)}
-      />
+      /> */}
       <select className="select" value={entreprise} onChange={(e) => setEntreprise(e.target.value)}>
           <option key="default"value={null} >
             Sélectionner une entreprise
