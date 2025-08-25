@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/user';
-const API_LOCAL = 'http://localhost:5000/api/local';
-const PRESENCE_API_URL = 'http://localhost:5000/api/presence';
-const PICTURES_API_URL = 'http://localhost:5000/api/pictures';
+const API_URL = 'https://bioscanner.onrender.com/api/user';
+const API_LOCAL = 'https://bioscanner.onrender.com/api/local';
+const PRESENCE_API_URL = 'https://bioscanner.onrender.com/api/presence';
+const PICTURES_API_URL = 'https://bioscanner.onrender.com/api/pictures';
 
 export const register = async (name, email, password, localId) => {
   const response = await axios.post(`${API_URL}/add`, { name, email, password, localId });

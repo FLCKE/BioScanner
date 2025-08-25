@@ -131,10 +131,10 @@ const Scanner = () => {
   // -------- Référence visage
   const loadReferenceImage = async (uid) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/pictures/${uid}`);
+      const res = await axios.get(`https://bioscanner.onrender.com/api/pictures/${uid}`);
       const url = res.data.imageUrl?.startsWith("http")
         ? res.data.imageUrl
-        : `http://localhost:5000${res.data.imageUrl}`;
+        : `https://bioscanner.onrender.com/${res.data.imageUrl}`;
       const img = await faceapi.fetchImage(url);
       const det = await faceapi
         .detectSingleFace(img, new faceapi.TinyFaceDetectorOptions())
@@ -155,7 +155,7 @@ const Scanner = () => {
   // -------- Vérifier si déjà pointé aujourd’hui
   const checkPresenceOnServer = async (uid) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/presence/user/${uid}`);
+      const res = await axios.get(`https://bioscanner.onrender.com/api/presence/user/${uid}`);
       const today = new Date().toLocaleDateString("fr-FR");
       const found = res.data.some(
         (p) => new Date(p.timestamp).toLocaleDateString("fr-FR") === today
@@ -216,7 +216,7 @@ const Scanner = () => {
     navigator.geolocation.getCurrentPosition(
       async ({ coords: { latitude, longitude } }) => {
         try {
-          const res = await axios.post("http://localhost:5000/api/presence/add", {
+          const res = await axios.post("https://bioscanner.onrender.com/api/presence/add", {
             userId,
             latitude,
             longitude,

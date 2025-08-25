@@ -28,7 +28,7 @@ export default function LoginScreen() {
 
       // Vérifie si la photo de référence existe
       const picRes = await fetch(
-        `http://localhost:5000/api/pictures/${userId}`
+        `https://bioscanner.onrender.com/api/pictures/${userId}`
       );
       const picData = (await picRes.ok) ? await picRes.json() : {};
       const hasPhoto = !!picData?.imageUrl;
