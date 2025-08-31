@@ -28,14 +28,7 @@ function App() {
             </ProtectedRoutes>
           }
         />
-        <Route
-          path="/register"
-          element={
-            <ProtectedRoutes>
-              <RegisterScreen />
-            </ProtectedRoutes>
-          }
-        />
+        <Route path="/register" element={<RegisterScreen />} />
         <Route
           path="/historique"
           element={
