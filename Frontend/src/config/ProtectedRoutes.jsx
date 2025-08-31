@@ -5,11 +5,12 @@ import { getUserPicture } from "../services/api";
 export default function ProtectedRoutes({ children }) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const picture = getUserPicture(localStorage.getItem("userId"));
-  if (!picture) {
-    navigate("/PhotoUpload");
-    return;
-  }
+  getUserPicture(localStorage.getItem("userId")).then((data) => {
+    console.log("data", data);
+    if (!data.imageUrl) {
+      navigate("/PhotoUpload");
+    }
+  });
 
   return token ? children : <Navigate to="/login" />;
 }
