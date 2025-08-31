@@ -7,6 +7,7 @@ export default function ProtectedRoutes({ children }) {
   const token = localStorage.getItem("token");
   getUserPicture(localStorage.getItem("userId")).catch((err) => {
     navigate("/PhotoUpload");
+    return;
   });
 
   return token ? children : <Navigate to="/login" />;
