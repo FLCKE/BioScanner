@@ -34,7 +34,7 @@ export default function LoginScreen() {
       const hasPhoto = !!picData?.imageUrl;
 
       setError("");
-      navigate(hasPhoto ? "/PhotoUpload" : "/home");
+      navigate(!hasPhoto ? "/PhotoUpload" : "/home");
       // ❌ PAS de reload ici
     } catch (err) {
       console.error("Erreur login :", err);
