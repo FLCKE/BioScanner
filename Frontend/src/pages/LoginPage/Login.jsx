@@ -30,7 +30,7 @@ export default function LoginScreen() {
       const picRes = await fetch(
         `https://bioscanner.onrender.com/api/pictures/${userId}`
       );
-      const picData = (await picRes.ok) ? await picRes.json() : {};
+      const picData = picRes.ok ? await picRes.json() : {};
       const hasPhoto = !!picData?.imageUrl;
 
       setError("");
