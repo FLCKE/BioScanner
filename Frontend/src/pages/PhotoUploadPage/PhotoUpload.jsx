@@ -1,4 +1,10 @@
-import React, { useRef, useState, useCallback, useEffect } from "react";
+import React, {
+  useRef,
+  useState,
+  useCallback,
+  useEffect,
+  useNavigate,
+} from "react";
 import Webcam from "react-webcam";
 import { uploadUserPicture } from "../../services/api";
 import "./index.css";
@@ -12,7 +18,7 @@ export default function PhotoUpload({ onSuccess }) {
   const [loading, setLoading] = useState(false);
   const webcamRef = useRef(null);
   const userId = localStorage.getItem("userId");
-
+  const navigate = useNavigate();
   useEffect(() => {
     return () => {
       if (
@@ -72,7 +78,10 @@ export default function PhotoUpload({ onSuccess }) {
       await uploadUserPicture(formData);
       setError("");
       setSuccess(true);
-      if (onSuccess) onSuccess();
+      if (onSuccess) {
+        onSuccess();
+      }
+      navigate("/home");
     } catch (err) {
       setError("Erreur lors de l'envoi de la photo.");
       setSuccess(false);
