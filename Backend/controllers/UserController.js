@@ -40,7 +40,6 @@ async function loginUser(req, res) {
     }
 
     try {
-        console.log("Tentative de login:", email, password);
 
         const user = await Users.findOne({ email });
         if (!user) {

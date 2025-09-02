@@ -49,4 +49,3 @@ module.exports = {
     deleteLocalById,
     UpdateLocal,
 };
-// Compare this snippet from routes/LocalRoutes.js:

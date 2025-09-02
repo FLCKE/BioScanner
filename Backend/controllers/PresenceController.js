@@ -24,36 +24,36 @@ function getDistanceInMeters(lat1, lon1, lat2, lon2) {
 
 // Ajouter une présence
 async function addPresence(req, res) {
-  console.log("🧪 Contenu de req.body :", req.body); // <-- Ajoute ceci
+  // console.log("🧪 Contenu de req.body :", req.body);
   const { userId, latitude, longitude } = req.body;
 
-  console.log('➡️ Requête reçue pour ajouter une présence');
-  console.log('Données reçues :', { userId, latitude, longitude });
+  // console.log('➡️ Requête reçue pour ajouter une présence');
+  // console.log('Données reçues :', { userId, latitude, longitude });
 
   try {
     const user = await User.findById(userId);
     if (!user) {
-      console.warn('❌ Utilisateur introuvable avec ID :', userId);
+      // console.warn('❌ Utilisateur introuvable avec ID :', userId);
       return res.status(404).json({ message: 'Utilisateur introuvable' });
     }
 
-    console.log('✅ Utilisateur trouvé :', user);
+    // console.log('✅ Utilisateur trouvé :', user);
 
     const local = await Local.findById(user.localId);
     if (!local) {
-      console.warn('❌ Local introuvable pour le localId :', user.localId);
+      // console.warn('❌ Local introuvable pour le localId :', user.localId);
       return res.status(404).json({ message: 'Local introuvable pour cet utilisateur' });
     }
 
-    console.log('✅ Local trouvé :', local);
+    // console.log('✅ Local trouvé :', local);
 
     const distance = getDistanceInMeters(latitude, longitude, local.latitude, local.longitude);
     const isInside = distance <= local.rayon;
 
-    console.log(`📍 Distance calculée : ${distance} m`);
-    console.log(`📍 Est dans le périmètre ? ${isInside}`);
+    // console.log(`📍 Distance calculée : ${distance} m`);
+    // console.log(`📍 Est dans le périmètre ? ${isInside}`);
     if (!isInside) {
-      console.warn('❌ L’utilisateur est en dehors du périmètre du local');
+      // console.warn('❌ L’utilisateur est en dehors du périmètre du local');
       return res.status(200).json({ value: false, message: 'En dehors du périmètre du local' });
     }
     const presence = new Presence({
@@ -64,7 +64,7 @@ async function addPresence(req, res) {
     });
 
     await presence.save();
-    console.log('✅ Présence enregistrée avec succès :', presence);
+    // console.log('✅ Présence enregistrée avec succès :', presence);
 
     return res.status(201).json({
       value: true,
@@ -72,7 +72,7 @@ async function addPresence(req, res) {
       presence
     });
   } catch (error) {
-    console.error('❌ Erreur serveur lors de l’ajout de présence :', error);
+    // console.error('❌ Erreur serveur lors de l’ajout de présence :', error);
     return res.status(500).json({ message: 'Erreur serveur interne' });
   }
 }
@@ -83,7 +83,7 @@ async function getAllPresences(req, res) {
     const presences = await Presence.find({});
     return res.status(200).json(presences);
   } catch (error) {
-    console.error('Erreur lors de la récupération des présences:', error);
+    // console.error('Erreur lors de la récupération des présences:', error);
     return res.status(500).json({ message: 'Erreur serveur' });
   }
 }
@@ -100,7 +100,7 @@ async function deletePresenceById(req, res) {
 
     res.status(200).json({ message: 'Présence supprimée' });
   } catch (error) {
-    console.error('Erreur lors de la suppression de la présence:', error);
+    // console.error('Erreur lors de la suppression de la présence:', error);
     res.status(500).json({ message: 'Erreur serveur' });
   }
 }
@@ -117,7 +117,7 @@ async function updatePresence(req, res) {
 
     res.status(200).json({ message: 'Présence mise à jour' });
   } catch (error) {
-    console.error('Erreur mise à jour:', error);
+    // console.error('Erreur mise à jour:', error);
     res.status(500).json({ message: 'Erreur serveur' });
   }
 }
@@ -130,7 +130,7 @@ async function getPresencesByUserId(req, res) {
 
     return res.status(200).json(presences); // ✅ Toujours 200 même si vide
   } catch (error) {
-    console.error('Erreur récupération par userId:', error);
+    // console.error('Erreur récupération par userId:', error);
     return res.status(500).json({ message: 'Erreur serveur' });
   }
 }

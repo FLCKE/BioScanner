@@ -20,7 +20,7 @@ const uploadSingle = upload.single('image');
 async function uploadUserPicture(req, res) {
   uploadSingle(req, res, async function (err) {
     if (err) {
-      console.error('Erreur Multer :', err);
+      // console.error('Erreur Multer :', err);
       return res.status(400).json({ error: 'Erreur lors de l\'upload de la photo' });
     }
 
@@ -44,7 +44,7 @@ async function uploadUserPicture(req, res) {
 
       res.status(200).json({ message: 'Photo uploadée avec succès', url: req.file.path });
     } catch (error) {
-      console.error('Erreur serveur :', error);
+      // console.error('Erreur serveur :', error);
       res.status(500).json({ error: 'Erreur interne du serveur' });
     }
   });
