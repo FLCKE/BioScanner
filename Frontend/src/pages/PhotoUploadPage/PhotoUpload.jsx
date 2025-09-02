@@ -1,10 +1,5 @@
-import React, {
-  useRef,
-  useState,
-  useCallback,
-  useEffect,
-  useNavigate,
-} from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Webcam from "react-webcam";
 import { uploadUserPicture } from "../../services/api";
 import "./index.css";
